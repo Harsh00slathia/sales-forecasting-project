@@ -3,7 +3,10 @@ import pandas as pd
 import pickle
 
 # Load trained pipeline
-model = pickle.load(open("rf_pipeline.pkl", "rb"))
+import os
+
+model_path = os.path.join(os.path.dirname(__file__), "rf_pipeline.pkl")
+model = pickle.load(open(model_path, "rb"))
 
 st.set_page_config(page_title="Retail Profit Predictor")
 
