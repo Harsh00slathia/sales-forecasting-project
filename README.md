@@ -103,3 +103,18 @@ Handling unseen categorical variables
 Cloud debugging and redeployment
 
 🔗 Live App: https://retail-profit-prediction-ml-djbny7appx733irq94u4uuj.streamlit.app/
+
+
+📈 Feature Importance
+
+Top features influencing profitability:
+
+Discount
+
+Sales
+
+Category
+
+Sub-Category
+
+Discount was the strongest predictor of loss-making orders.
