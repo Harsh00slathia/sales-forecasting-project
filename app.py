@@ -1,49 +1,70 @@
 import streamlit as st
-import pandas as pd
-import pickle
 
-# Load trained pipeline
-import os
+st.set_page_config(
+    page_title="Retail Profit Predictor",
+    page_icon="📊",
+    layout="wide"
+)
 
-model_path = os.path.join(os.getcwd(), "rf_pipeline.pkl")
+st.markdown("""
+    <h1 style='text-align: center; color: #2E86C1;'>
+        📊 Retail Profit Prediction App
+    </h1>
+""", unsafe_allow_html=True)
 
-with open(model_path, "rb") as f:
-    model = pickle.load(f)
+st.markdown("""
+    <p style='text-align: center; font-size:18px;'>
+        Predict whether a retail order will be <b>Profitable</b> or <b>Loss-Making</b>
+    </p>
+""", unsafe_allow_html=True)
 
+st.divider()
 
-st.set_page_config(page_title="Retail Profit Predictor")
+col1, col2 = st.columns(2)
 
-st.title("🛒 Retail Profit Prediction App")
-st.write("Predict whether a retail order will be Profitable or Loss-Making.")
+with col1:
+    sales = st.number_input("Sales", min_value=0.0)
+    discount = st.number_input("Discount", min_value=0.0, max_value=1.0)
 
-# User Inputs
-sales = st.number_input("Sales", min_value=0.0)
-quantity = st.number_input("Quantity", min_value=1)
-discount = st.slider("Discount", 0.0, 1.0)
+with col2:
+    category = st.selectbox("Category", ["Technology", "Furniture", "Office Supplies"])
+    sub_category = st.selectbox("Sub-Category", [...])
+    
+predict_button = st.button("🚀 Predict Profitability", use_container_width=True)
 
-category = st.selectbox("Category", ["Furniture", "Office Supplies", "Technology"])
-region = st.selectbox("Region", ["Central", "East", "South", "West"])
-segment = st.selectbox("Segment", ["Consumer", "Corporate", "Home Office"])
-
-sub_category = st.text_input("Sub-Category (Example: Tables, Chairs, Phones)")
-
-# Create input dataframe
-input_data = pd.DataFrame({
-    "Sales": [sales],
-    "Quantity": [quantity],
-    "Discount": [discount],
-    "Category": [category],
-    "Sub-Category": [sub_category],
-    "Region": [region],
-    "Segment": [segment]
-})
-
-# Prediction
-if st.button("Predict"):
+if predict_button:
     prediction = model.predict(input_data)
 
     if prediction[0] == 1:
-        st.success("✅ This order is likely Profitable")
+        st.success("✅ This Order is Profitable!")
     else:
-        st.error("⚠ This order is likely Loss-Making")
+        st.error("⚠️ This Order is Likely Loss-Making!")
+
+if predict_button:
+    prediction = model.predict(input_data)
+    probability = model.predict_proba(input_data)
+
+    profit_prob = probability[0][1] * 100
+
+    st.metric("Profit Probability", f"{profit_prob:.2f}%")
+
+st.sidebar.header("📌 About Project")
+st.sidebar.write("""
+This ML model predicts whether a retail order will result in profit or loss.
+Built using Random Forest and deployed on Streamlit Cloud.
+""")
+
+st.sidebar.write("Author: Harsh Slathia")
+
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #F8F9F9;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
+
+
 
